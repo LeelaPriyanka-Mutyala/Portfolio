@@ -11,11 +11,12 @@ document.addEventListener("DOMContentLoaded", () => {
             const x = e.clientX;
             const y = e.clientY;
 
-            // డాట్ వెంటనే పాయింటర్ కింద మూవ్ అవుతుంది
+            // Move the dot instantly under the pointer
             cursorDot.style.left = `${x}px`;
             cursorDot.style.top = `${y}px`;
 
-            // అవుట్‌లైన్ కొద్దిగా స్మూత్ లాగ్‌తో ఫాలో అవుతుంది (350ms నుండి 150ms కి తగ్గించాను - లాగ్ లేకుండా ఉండటానికి)
+            // Outline follows smoothly with a slight delay
+            // Reduced duration from 350ms to 150ms for better responsiveness
             cursorOutline.animate(
                 {
                     left: `${x}px`,
@@ -28,9 +29,11 @@ document.addEventListener("DOMContentLoaded", () => {
             );
         });
 
-        // బటన్స్, లింక్స్ మరియు కార్డ్స్ పైకి వెళ్ళినప్పుడు కర్సర్ పెద్దదయ్యే ఎఫెక్ట్
-        const hoverElements = document.querySelectorAll('a, button, .copy-btn, .skill-card, .project-card, .cert-card, .timeline-card');
-        
+        // Enlarge cursor when hovering over buttons, links, and cards
+        const hoverElements = document.querySelectorAll(
+            'a, button, .copy-btn, .skill-card, .project-card, .cert-card, .timeline-card'
+        );
+
         hoverElements.forEach(elem => {
             elem.addEventListener('mouseenter', () => {
                 cursorOutline.style.width = '60px';
@@ -38,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 cursorOutline.style.backgroundColor = 'rgba(0, 242, 255, 0.1)';
                 cursorOutline.style.borderColor = 'var(--accent-primary)';
             });
-            
+
             elem.addEventListener('mouseleave', () => {
                 cursorOutline.style.width = '30px';
                 cursorOutline.style.height = '30px';
@@ -47,7 +50,6 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
     }
-
 
     /* ==========================================
        2. COPY EMAIL FUNCTION
@@ -70,22 +72,21 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-
     /* ==========================================
        3. SCROLL REVEAL ANIMATION (FIXED)
     ========================================== */
     const observerOptions = {
-        threshold: 0.15, // 15% కార్డు స్క్రీన్‌పై కనిపించగానే అనిమేషన్ రన్ అవుతుంది
-        rootMargin: "0px 0px -50px 0px" // కింద కొద్దిగా మార్జిన్ ఇస్తే అనిమేషన్ లుక్ బాగుంటుంది
+        threshold: 0.15, // Animation starts when 15% of the card becomes visible
+        rootMargin: "0px 0px -50px 0px" // Adds bottom margin for a smoother reveal effect
     };
 
     const observer = new IntersectionObserver((entries, obs) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                // క్లాస్ యాడ్ చేయకుండా నేరుగా ఇక్కడే ఒపాసిటీ 1 చేస్తున్నాం (ఫిక్స్)
+                // Directly make the element visible when it enters the viewport
                 entry.target.style.opacity = "1";
                 entry.target.style.transform = "translateY(0)";
-                obs.unobserve(entry.target); // ఒకసారి కనిపించాక మళ్ళీ అబ్జర్వర్ రన్ అవ్వదు
+                obs.unobserve(entry.target); // Stop observing after first reveal
             }
         });
     }, observerOptions);
@@ -95,9 +96,9 @@ document.addEventListener("DOMContentLoaded", () => {
     );
 
     animatedElements.forEach(el => {
-        // స్టార్టింగ్‌లో కార్డ్స్ కనిపించకుండా దాచడం
+        // Initial hidden state before animation
         el.style.opacity = "0";
-        el.style.transform = "translateY(30px)"; // 20px నుండి 30px కి మార్చాను, స్మూత్ లిఫ్ట్ ఎఫెక్ట్ కోసం
+        el.style.transform = "translateY(30px)"; // Slight upward lift effect
         el.style.transition = "opacity 0.8s ease-out, transform 0.8s ease-out";
 
         observer.observe(el);
